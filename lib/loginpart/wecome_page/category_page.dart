@@ -8,11 +8,11 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   final List<String> categories = [
-    'Pizza',
-    'Burgers',
-    'Sushi',
-    'Salads',
-    'Desserts'
+    'Dishes',
+    'langouste',
+    'salad',
+    'pizza',
+    'pilaf'
   ];
 
   @override
