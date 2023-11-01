@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class Data {
   static List foods = [
-    "pilaf1",
-    "dishes",
-    "salad2",
+    "chicken",
+    "samosa1",
     "salad",
+    "langouste",
   ];
 
   static List foods2 = [

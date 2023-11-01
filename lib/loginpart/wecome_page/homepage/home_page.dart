@@ -1,7 +1,10 @@
 import 'package:best_food_project/loginpart/login.dart';
 import 'package:best_food_project/loginpart/wecome_page/homepage/categorycard.dart';
 import 'package:best_food_project/loginpart/wecome_page/homepage/data.dart';
+// import 'package:best_food_project/loginpart/wecome_page/homepage/data.dart';
+// import 'package:best_food_project/loginpart/wecome_page/homepage/data.dart';
 import 'package:best_food_project/loginpart/wecome_page/homepage/item_screen_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +17,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   String deliveryLocation = "Moroni, Comoros"; // Default location
+
+  List<Map<String, dynamic>> searchResult = [];
 
   // Function to change the delivery location
   void changeLocation() {
@@ -24,7 +31,48 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void searchFromFirebase(String query) async {
+    // Retrieve data from Firestore
+    final result = await _firestore
+        .collection('food')
+        .where('name', isEqualTo: query)
+        .get();
+
+    setState(() {
+      // Update your widget's state with the retrieved data
+      searchResult = result.docs.map((e) => e.data()).toList();
+    });
+  }
+
+  Future<void> addDataToFirestore() async {
+    await _firestore.collection('food').add({
+      'name': 'salad',
+      'name': 'chicken',
+      'foods': 'pilaf',
+      'price': 20,
+      // Add more fields as needed
+    });
+  }
+
+  // List searchResult = [];
+
+  // void searchFromFirebase(String query) async {
+  //   final result = await FirebaseFirestore.instance
+  //       .collection('search')
+  //       .where('name', isEqualTo: query)
+  //       .get();
+
+  //   setState(() {
+  //     searchResult = result.docs.map((e) => e.data()).toList();
+  //   });
+  // }
+
   @override
+  void initState() {
+    super.initState();
+    // Initialize Firestore here
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -176,9 +224,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           border: InputBorder.none,
                           prefixIcon: Icon(Icons.search),
                         ),
+                        // onChanged: (query) {
+                        //   searchFromFirebase(query);
+                        // },
                       ),
                     ),
                   ),
+                  // Expanded(
+                  //   child: ListView.builder(
+                  //     itemCount: searchResult.length,
+                  //     itemBuilder: (context, index) {
+                  //       return ListTile(
+                  //         title: Text(searchResult[index]['name']),
+                  //         subtitle: Text(searchResult[index]['price']),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                   InkWell(
                     onTap: () {},
                     child: Container(
